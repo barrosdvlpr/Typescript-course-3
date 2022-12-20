@@ -1,4 +1,4 @@
-import { getUserDetails } from './getUserDetails';
+import { magic } from './server'; 
 
 export default function Home() {
   return (
@@ -8,38 +8,42 @@ export default function Home() {
   )
 }
 
-async function main() {
-  const handles = [
-    'basarat',
-    'eggheadio',
-    'joelhooks'
-  ];
-  
-  // for (const handle of handles) {
-  //   const item = await getUserDetails(handle);
-  //   console.log(`
-  //   Name: ${item.name}
-  //   Location: ${item.location}
-  //   `);
-  // }
+// function* numbers() {
+//   let index = 1;
+//   while (true) {
+//     yield index;
+//     index = index + 1;
+//     if (index > 10) {
+//       break;
+//     }
+//   }
+// }
 
-  const allPromises = handles.map(getUserDetails);
-  // const combinedPromise = Promise.all(allPromises);
-  // const details = await combinedPromise;
-  // for (const item of details) {
-  //   console.log(`
-  //     Name: ${item.name}
-  //     Location: ${item.location}
-  //   `);
-  // }
+(Symbol as any).asyncIterator =
+  (Symbol as any).asyncIterator
+  || Symbol.for("Symbol.asyncIterator");
 
-  const resultOfPromiseThatWins = Promise.race(allPromises);
-  const item = await resultOfPromiseThatWins;
-    console.log(`
-      Name: ${item.name}
-      Location: ${item.location}
-    `);
+async function* numbers() {
+  let index = 1;
+  while (true) {
+    yield index;
+    index = await magic(index);
+    if (index > 10) {
+      break;
+    }
+  }
 }
 
-main();
+// function main() {
+//    for (const num of numbers()) {
+//      console.log(num);
+//    }
+// }
+// main();
 
+async function main() {
+  for await (const num of numbers()) {
+    console.log(num);
+  }
+}
+main();
