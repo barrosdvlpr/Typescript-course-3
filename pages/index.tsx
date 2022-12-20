@@ -7,27 +7,60 @@ export default function Home() {
   )
 }
 
-const run = (cb) => {
-  setTimeout(() => {
-    cb('1s');
-    setTimeout(() => {
-      cb('2s');
-      setTimeout(() => {
-        cb('3s');
-      }, 1000);
-    }, 1000);
-  }, 1000);
-}
+const example = new Promise<number>((resolve, reject) => {
+  // Use resolve or reject to determine the fate of the promise
+  resolve(123)
+  // reject(new Error('failed'))
+});
 
-const delay = (ms) => new Promise(res => setTimeout(res, ms));
+example.then(value => {
+  console.log('then', value);
+});
 
-const runAsync = async (cb) => {
-  await delay(1000);
-  cb('1s');
-  await delay(1000);
-  cb('2s');
-  await delay(1000);
-  cb('3s');
-}
+example.catch(error => {
+  console.log('catch', error);
+});
 
-runAsync((time)=>console.log(time));
+const first = new Promise<number>((resolve, reject) => {
+  resolve(123);
+})
+const second =
+  first
+    .then(value => {
+      // Control the fate of second
+      // return 456
+      // return new Promise((res) => res(789));
+      // return new Promise((res, rej) => rej(new Error('example')));
+      // throw new Error('example');
+      foo.bar;
+    });
+
+// console.log(first === second); // false
+
+second.then(value => {
+  console.log('second then', value);
+});
+second.catch(error => {
+  console.log('second catch', error);
+});
+
+
+
+new Promise<number>((res, rej) => {
+  res(123);
+})
+  .then(res => {
+    console.log(res);
+    return 456;
+  })
+  .then(res => {
+    console.log(res);
+    return 789;
+  })
+  .then(res => {
+    console.log(res);
+    // foo;
+  })
+  .catch(err => {
+    console.log('ERROR:', err.message);
+  });
